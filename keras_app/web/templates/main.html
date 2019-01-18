@@ -1,0 +1,80 @@
+{% raw %}
+<html>
+
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div id="app" v-bind:style="{ backgroundColor: wineColour }">
+        {{ message }}
+        <form>
+            <div class="form-group" v-for="(item,idx) in inputs">
+                <label :for="item.id">{{ item.name }} [{{ item.units }}]: </label>
+                <input type="range" v-model="item.value" v-on:change="getPrediction" :min="item.min" :max="item.max"
+                    :step="item.step" class="form-control-range" :id="item.id" />{{ item.value }}
+            </div>
+        </form>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                message: 'change the sliders to make a prediction!',
+                inputs: [
+                    { id: 'fixedAcidity', name: 'Fixed acidity', units: 'g/dm3', min: '3.8', max: '15.9', step: '0.1', value: '3.8' }, 
+                    { id: 'volatileAcidity', name: 'Volatile acidity', units: 'g/dm3', min: '0.08', max: '1.58', step: '0.01', value: '0.08' }, 
+                    { id: 'citricAcid', name: 'Citric acid', units: 'g/dm3', min: '0', max: '1.66', step: '0.01', value: '0' }, 
+                    { id: 'residualSugar', name: 'Residual sugar', units: 'g/dm3', min: '0.6', max: '65.8', step: '0.1', value: '0.6' }, 
+                    { id: 'chlorides', name: 'Chlorides', units: 'g/dm3', min: '0.009', max: '0.611', step: '0.001', value: '0.009' }, 
+                    { id: 'freeSulfurDioxide', name: 'Free sulfur dioxide', units: 'mg/dm3', min: '1', max: '289', step: '1', value: '1' }, 
+                    { id: 'totalSulfurDioxide', name: 'Total sulfur dioxide', units: 'mg/dm3', min: '6', max: '440', step: '1', value: '6' }, 
+                    { id: 'density', name: 'Density', units: 'g/cm3', min: '0.98711', max: '1.03898', step: '0.00001', value: '0.98711' }, 
+                    { id: 'ph', name: 'pH', units: '-', min: '2.72', max: '4.01', step: '0.01', value: '2.72' }, 
+                    { id: 'sulphates', name: 'Sulphates', units: 'g/dm3', min: '0.22', max: '2', step: '0.01', value: '0.22' }, 
+                    { id: 'alcohol', name: 'Alcohol', units: '% vol', min: '8', max: '14.9', step: '0.1', value: '8' }
+                    //{ id: 'quality', name: 'Quality', units: '0-10', min: '3', max: '9', step: '1', value: '3' }
+                ]
+            },
+            computed: {
+                wineColour: function () {
+                    if (this.message < 0.5) {
+                        return '#ffff99';
+                    }
+                    else {
+                        return '#b30000';
+                    }
+                }
+            },
+            methods: {
+                getPrediction() {
+                    params = {}
+                    for (param of this.inputs) {
+                        params[param.id] = param.value
+                    }
+                    axios
+                        .get('/api/',{
+                            params: params
+                            //     fixedAcidity: 13,
+                            //     volatileAcidity: 1,
+                            //     citricAcid: 1.33,
+                            //     residualSugar: 32,
+                            //     chlorides: 0.2234,
+                            //     freeSulfurDioxide:24,
+                            //     totalSulfurDioxide:305,
+                            //     density: 0.799,
+                            //     ph: 3.08,
+                            //     sulphates: 0.76,
+                            //     alcohol: 14.6
+                            // }
+                        }
+                        ).then(response => (this.message = response.data))
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
+{% endraw %}
