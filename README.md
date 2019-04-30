@@ -45,7 +45,7 @@ Navigate via the cli to the wine folder and then run the following command:
 
 Now to run the container you need to do:
 
-```docker run -d -p 5071:5071 flask-app```
+```docker run -d -p 5000:5000 flask-app```
 
 If you want to stop a docker container then you can use the command:
 
@@ -55,7 +55,7 @@ Be sure to use the name of the container and not the image name, otherwise it wo
 
 e.g 
 
-```docker run -d -p 5071:5071 --name yourcontainername yourimage```
+```docker run -d -p 5000:5000 --name yourcontainername yourimage```
 
 
 
